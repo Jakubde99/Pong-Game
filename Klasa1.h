@@ -13,6 +13,8 @@
 #include<ctime>
 #include<SFML/Graphics.hpp>
 #include<windows.h>
+#include<thread>
+
 
 using namespace std;
 enum eKier{STOP=0,LEWO=1,GLEWO=2,DLEWO=3,PRAWO=4,GPRAWO=5,DPRAWO=6};
