@@ -14,7 +14,7 @@ link_libraries(stdc++fs) #link the filesystem
 
 include_directories("CMAKE_CURRENT_LIST_DIR/Sprites")
 
-set(SOURCE_FILES main.cpp Klasa1.h)
+set(SOURCE_FILES main.cpp Klasa1.h game_window.h)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} Klasa1.h)
 
 find_package(SFML 2.5.1 COMPONENTS system window graphics network audio REQUIRED)
