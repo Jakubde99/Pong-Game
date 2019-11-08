@@ -9,14 +9,17 @@ void game ()
 {
 
         sf::RenderWindow okno ( sf::VideoMode(1000, 600, 32 ), "249575 - pong" );
+        sf::SoundBuffer hit;
+        sf::SoundBuffer point;
+        hit.loadFromFile("")
         sf::Texture tekstura1;
         sf::Texture tekstura2;
         sf::Texture tekstura3;
-        sf::Texture tekstura4;
+        //sf::Texture tekstura4;
         tekstura1.loadFromFile( "sprites1.png" );
         tekstura2.loadFromFile( "sprites2.png" );
         tekstura3.loadFromFile( "sprites3.png" );
-        tekstura4.loadFromFile( "sprites4.png" );
+        //tekstura4.loadFromFile( "sprites4.png" );
         sf::Sprite Tytul;
         sf::Sprite player1;
         sf::Sprite player2;
