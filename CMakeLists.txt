@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-set(PROJECT_NAME "PROJEKT_APLIKACJE")
+set(PROJECT_NAME "serwer")
 project(${PROJECT_NAME})
 
 set(SFML_DIR "${CMAKE_CURRENT_LIST_DIR}/libs/SFML-2.5.1/lib/cmake/SFML")
@@ -12,11 +12,11 @@ set(SFML_DIR "${CMAKE_CURRENT_LIST_DIR}/libs/SFML-2.5.1/lib/cmake/SFML")
 set(CMAKE_CXX_STANDARD 17)
 link_libraries(stdc++fs) #link the filesystem
 
-include_directories("CMAKE_CURRENT_LIST_DIR/Sprites")
 
-set(SOURCE_FILES main.cpp Klasa1.h)
-add_executable(${PROJECT_NAME} ${SOURCE_FILES} Klasa1.h)
 
+set(SOURCE_FILES main.cpp)
+add_executable(${PROJECT_NAME} ${SOURCE_FILES} )
+target_link_libraries(${CMAKE_PROJECT_NAME} ws2_32)
 find_package(SFML 2.5.1 COMPONENTS system window graphics network audio REQUIRED)
 #find_package(TGUI 0.8 REQUIRED)
-target_link_libraries(${PROJECT_NAME} sfml-audio sfml-graphics sfml-window sfml-system )
+target_link_libraries(${PROJECT_NAME} sfml-audio sfml-graphics sfml-window sfml-system sfml-network)

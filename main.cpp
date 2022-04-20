@@ -1,145 +1,77 @@
-#include "Klasa1.h"
 
-class RenderWindow;
-
-using namespace std;
-int main()
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+#include <SFML/Network.hpp>
+#include <iostream>
+void runUdpServer(unsigned short port)
 {
+    // Create a socket to receive a message from anyone
+    sf::UdpSocket socket;
 
-    sf::RenderWindow okno ( sf::VideoMode(1000, 600, 32 ), "249575 - pong" );
-    sf::Texture tekstura1;
-    sf::Texture tekstura2;
-    sf::Texture tekstura3;
-    sf::Texture tekstura4;
-    tekstura1.loadFromFile( "sprites1.png" );
-    tekstura2.loadFromFile( "sprites2.png" );
-    tekstura3.loadFromFile( "sprites3.png" );
-    tekstura4.loadFromFile( "sprites4.png" );
-    sf::Sprite Tytul;
-    sf::Sprite player1;
-    sf::Sprite player2;
-    sf::Sprite ball;
-    player1.setTexture( tekstura1 );
-    player2.setTexture( tekstura2 );
-    ball.setTexture( tekstura3 );
-    cBall c(500,300);
-    cPaletka p1(0,300);
-    cPaletka p2(960,300);
-    player1.setPosition( p1.getX(), p1.getY()  );
-    player2.setPosition(p2.getX(), p2.getY()  );
-    ball.setPosition(c.getX(),c.getY());
-    int wynik1 = 0,wynik2 = 0;
-    c.loskier();
-    while( okno.isOpen() )
+    // Listen to messages on the specified port
+    if (socket.bind(port) != sf::Socket::Done)
+        return;
+    std::cout << "Server is listening to port " << port << ", waiting for a message... " << std::endl;
+
+    // Wait for a message
+    char in[128];
+    std::size_t received;
+    sf::IpAddress sender;
+    unsigned short senderPort;
+    if (socket.receive(in, sizeof(in), received, sender, senderPort) != sf::Socket::Done)
+        return;
+    std::cout << "Message received from client " << sender << ": \"" << in << "\"" << std::endl;
+
+    // Send an answer to the client
+    const char out[] = "Hi, I'm the server";
+    if (socket.send(out, sizeof(out), sender, senderPort) != sf::Socket::Done)
+        return;
+    std::cout << "Message sent to the client: \"" << out << "\"" << std::endl;
+}
+
+
+
+////////////////////////////////////////////////////////////
+/// Launch a server, wait for a message, send an answer.
+///
+///////////////////////////////////////////////////////////
+/// /
+void runUdpClient(unsigned short port)
+{
+    // Ask for the server address
+    sf::IpAddress server;
+    do
     {
-        sf::Event zdarzenie;
-        while( okno.pollEvent( zdarzenie ))
-        {
-
-
-            if( zdarzenie.type == sf::Event::KeyPressed && zdarzenie.key.code == sf::Keyboard::O)
-            {
-                cBall c(500,300);
-                cPaletka p1(0,300);
-                cPaletka p2(960,300);
-                player1.setPosition( p1.getX(), p1.getY()  );
-                player2.setPosition(p2.getX(), p2.getY()  );
-                ball.setPosition(c.getX(),c.getY());
-                //int wynik1 = 0,wynik2 = 0;
-                wynik1=wynik2=0;
-            }
-
-            if( zdarzenie.type == sf::Event::Closed )
-                okno.close();
-            if( zdarzenie.type == sf::Event::KeyPressed && zdarzenie.key.code == sf::Keyboard::Escape )
-                okno.close();
-            if( zdarzenie.type == sf::Event::MouseButtonPressed && zdarzenie.mouseButton.button == sf::Mouse::Middle )
-                okno.close();
-            if( zdarzenie.type == sf::Event::KeyPressed && zdarzenie.key.code == sf::Keyboard::Up && p2.getY()>0)
-            {
-                p2.RuchG();
-                player2.move(0,-50);
-            }
-            if( zdarzenie.type == sf::Event::KeyPressed && zdarzenie.key.code == sf::Keyboard::Down && p2.getY()<500)
-            {
-                p2.RuchD();
-                player2.move(0,50);
-            }
-            if( zdarzenie.type == sf::Event::KeyPressed && zdarzenie.key.code == sf::Keyboard::W && p1.getY()>0)
-            {
-                p1.RuchG();
-                player1.move(0,-50);
-            }
-            if( zdarzenie.type == sf::Event::KeyPressed && zdarzenie.key.code == sf::Keyboard::S&& p1.getY()<500 )
-            {
-                p1.RuchD();
-                player1.move(0,50);
-            }
-
-            for(int i=0;i<185;i++)
-                if(c.getX()==p1.getX()+20)
-                    if(c.getY()==p1.getY()+i)
-                        c.zmienkier((eKier) (rand()%3 +4));
-            for(int i=0;i<185;i++)
-                if(c.getX()==p2.getX()-30)
-                    if(c.getY()==p2.getY()+i)
-                        c.zmienkier((eKier) (rand()%3 +1));
-            if(c.getY()>=550)
-            {
-                if(c.getkierunek()==DPRAWO)
-                    c.zmienkier(GPRAWO);
-                else c.zmienkier(GLEWO);
-            }
-            if(c.getY()<=0)
-            {
-                if(c.getkierunek()==GPRAWO)
-                    c.zmienkier(DPRAWO);
-                else c.zmienkier(DLEWO);
-            }
-            if(c.getX()>=980)
-            {
-                wynik1++;
-                c.Reset();
-                c.loskier();
-                p1.Reset();
-                p2.Reset();
-
-                player1.setPosition( p1.getX(), p1.getY()  );
-                player2.setPosition(p2.getX(), p2.getY()  );
-                ball.setPosition(c.getX(),c.getY());
-            }
-            if(c.getX()<0)
-            {
-                wynik2++;
-                c.Reset();
-                c.loskier();
-                p1.Reset();
-                p2.Reset();
-
-                player1.setPosition( p1.getX(), p1.getY()  );
-                player2.setPosition(p2.getX(), p2.getY()  );
-                ball.setPosition(c.getX(),c.getY());
-            }
-
-            cout<<wynik1<<"  WYNIK  "<<wynik2<<endl;
-            cout<<c.getX()<<"     "<<c.getY()<<endl;
-            cout<<ball.getPosition().x<<" pilka "<<ball.getPosition().y<<endl<<endl;
-
-            //cout<<player2.getPosition().x<<" gr2 "<<player2.getPosition().y<<endl;
-            cout<<p2.getX()<<" gracz2 "<<p2.getY()<<endl<<endl;
-            //cout<<player1.getPosition().x<<" gr1 "<<player1.getPosition().y<<endl;
-            //cout<<p1.getX()<<" gracz1 "<<p1.getY()<<endl<<endl;
-            c.ruchball();
-            ball.setPosition(c.getX(),c.getY());
-
-        }
-
-        okno.clear( sf::Color::Black );
-        okno.draw( player1 );
-        okno.draw( player2 );
-        okno.draw( ball );
-        okno.display();
+        std::cout << "Type the address or name of the server to connect to: ";
+        std::cin  >> server;
     }
+    while (server == sf::IpAddress::None);
 
-    return 0;
+    // Create a socket for communicating with the server
+    sf::UdpSocket socket;
+
+    // Send a message to the server
+    const char out[] = "Hi, I'm a client";
+    if (socket.send(out, sizeof(out), server, port) != sf::Socket::Done)
+        return;
+    std::cout << "Message sent to the server: \"" << out << "\"" << std::endl;
+
+    // Receive an answer from anyone (but most likely from the server)
+    char in[128];
+    std::size_t received;
+    sf::IpAddress sender;
+    unsigned short senderPort;
+    if (socket.receive(in, sizeof(in), received, sender, senderPort) != sf::Socket::Done)
+        return;
+    std::cout << "Message received from " << sender << ": \"" << in << "\"" << std::endl;
+}
+int main(){
+    unsigned short port =2020;
+   runUdpServer(port);
+
+////////////////////////////////////////////////////////////
+/// Send a message to the server, wait for the answer
+///
+////////////////////////////////////////////////////////////
 }
